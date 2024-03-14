@@ -3,9 +3,12 @@ package br.com.marlonsilva.pacleservice.web;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.marlonsilva.pacleservice.api.PlaceRequest;
+import br.com.marlonsilva.pacleservice.api.PlaceResponse;
 import br.com.marlonsilva.pacleservice.domain.Place;
 import br.com.marlonsilva.pacleservice.domain.PlaceService;
 import reactor.core.publisher.Mono;
@@ -21,9 +24,9 @@ public class PlaceController {
     }
 
     @PostMapping
-    public ResponseEntity<Mono<Place>> create(Place place){
-        var createPlace = placeService.create(place);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createPlace);
+    public ResponseEntity<Mono<PlaceResponse>> create(@RequestBody PlaceRequest request){
+        var placeResponse = placeService.create(request).map(PlaceMapper::fromPlaceToResponse);
+        return ResponseEntity.status(HttpStatus.CREATED).body(placeResponse);
     }
      
 }
